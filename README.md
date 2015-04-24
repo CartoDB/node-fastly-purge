@@ -2,6 +2,13 @@
 
 Implements Fastly Purging API, see https://docs.fastly.com/api/purge
 
+[![NPM](https://nodei.co/npm/fastly-purge.png?downloads=true&downloadRank=true)](https://nodei.co/npm/fastly-purge)
+
+[![Build Status](https://travis-ci.org/CartoDB/node-fastly-purge.png?branch=master)](https://travis-ci.org/CartoDB/node-fastly-purge)
+[![Code Climate](https://codeclimate.com/github/CartoDB/node-fastly-purge/badges/gpa.png)](https://codeclimate.com/github/CartoDB/node-fastly-purge)
+
+
+
 ## Dependencies
 
  * Node >=0.10
