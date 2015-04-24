@@ -1,0 +1,39 @@
+{
+  "name": "fastly-purge",
+  "version": "1.0.0",
+  "description": "Node.js' Fastly Purging API implementation",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "make test-all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:CartoDB/node-fastly-purge.git"
+  },
+  "keywords": [
+    "fastly",
+    "purge",
+    "purging",
+    "api"
+  ],
+  "author": "Raul Ochoa <rochoa@cartodb.com>",
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/CartoDB/node-fastly-purge/blob/master/LICENCE"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/CartoDB/node-fastly-purge/issues"
+  },
+  "homepage": "https://github.com/CartoDB/node-fastly-purge",
+  "dependencies": {
+    "request": "^2.55.0"
+  },
+  "devDependencies": {
+    "istanbul": "^0.3.13",
+    "jshint": "^2.7.0",
+    "mocha": "^2.2.4",
+    "nock": "^1.6.1"
+  }
+}
