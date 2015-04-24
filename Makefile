@@ -1,3 +1,6 @@
+clean:
+	@rm -rf ./node_modules
+
 jshint:
 	@./node_modules/.bin/jshint lib/ test/
 
