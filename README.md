@@ -77,3 +77,7 @@ fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, { softPurge: true }, callba
 // or
 fastlySoftPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, callback);
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
