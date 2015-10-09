@@ -2,7 +2,7 @@
 
 ## 1.0.1
 
-Released 2015-mm-dd
+Released 2015-10-09
 
  - Assumes service id and key are provided with the right format
 
