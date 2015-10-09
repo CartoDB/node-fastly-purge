@@ -29,8 +29,8 @@ var FAKE_PURGE_URL = 'http://example.com/image.jpg';
 var FAKE_SERVICE_ID = 'wadus_service_id';
 var FAKE_SURROGATE_KEY = 'wadus_key';
 
-var fastlyPurge = new FastlyPurge(API_KEY);
-var fastlySoftPurge = new FastlyPurge(API_KEY, { softPurge: true });
+var fastlyPurge = new FastlyPurge(FAKE_API_KEY);
+var fastlySoftPurge = new FastlyPurge(FAKE_API_KEY, { softPurge: true });
 
 function callback(err, result) {
     console.log(err, result);
