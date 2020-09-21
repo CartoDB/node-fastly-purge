@@ -74,6 +74,35 @@ describe('FastlyPurge', function() {
         });
     });
 
+    describe('shielding purge', function() {
+        var fastlyPurge = new FastlyPurge(FAKE_API_KEY);
+        
+        it('should purge twice by surrogate KEY with Fastly API key header', function(done) {
+            var purgePath = '/service/' + FAKE_SERVICE_ID + '/purge/' + FAKE_SURROGATE_KEY;
+            var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
+                .post(purgePath)
+                .matchHeader('Fastly-Key', FAKE_API_KEY)
+                .matchHeader('Accept', 'application/json')
+                .times(2)
+                .reply(200, {
+                    status:'ok'
+                });
+
+            var options = {
+                shieldingDelay: 100,
+                shieldingWait: true
+            };
+
+            fastlyPurge.shieldingKey(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, options, function(err, result) {
+                assert.ok(!err, err && err.message);
+                assert.ok(result);
+                assert.equal(result.status, 'ok');
+                assert.equal(scope.pendingMocks().length, 0);
+                done();
+            });
+        });
+    });
+
     describe('soft purge', function() {
         var fastlyPurge = new FastlyPurge(FAKE_API_KEY, { softPurge: true });
 
