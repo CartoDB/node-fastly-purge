@@ -21,8 +21,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with no Fastly headers', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .reply(200, {
                     status:'ok',
                     id:'108-1391560174-974124'
@@ -42,7 +40,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -62,7 +59,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -84,7 +80,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with Fastly soft purge header but no API key', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
                 .matchHeader('Fastly-Soft-Purge', 1)
                 .reply(200, {
                     status:'ok',
@@ -105,7 +100,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -148,8 +142,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with NO Fastly soft purge header', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .reply(200, {
                     status:'ok',
                     id:'108-1391560174-974124'
@@ -169,7 +161,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -193,7 +184,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with Fastly soft purge headers', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
                 .matchHeader('Fastly-Soft-Purge', 1)
                 .reply(200, {
                     status:'ok',
@@ -239,7 +229,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(503, 'Service Unavailable');
 
@@ -258,7 +247,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(501);
 
@@ -282,7 +270,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, '{ "status":"ok" }');
 
@@ -301,7 +288,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, '{ "status":"ok" ', { 'Content-Type': 'application/json' });
 
