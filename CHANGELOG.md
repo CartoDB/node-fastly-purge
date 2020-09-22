@@ -1,8 +1,10 @@
 # Changelog
 
-## 1.0.2
+## 1.1.0
 
-Released 2015-mm-dd
+Released 2020-09-22
+
+- Adding support for invalidating surrogate keys with shielding
 
 
 ## 1.0.1

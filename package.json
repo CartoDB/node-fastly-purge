@@ -1,6 +1,6 @@
 {
   "name": "fastly-purge",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Node.js' Fastly Purging API implementation",
   "main": "lib/index.js",
   "scripts": {
@@ -31,9 +31,9 @@
     "request": "^2.55.0"
   },
   "devDependencies": {
-    "istanbul": "^0.3.13",
+    "istanbul": "^0.4.5",
     "jshint": "^2.7.0",
-    "mocha": "^2.2.4",
-    "nock": "^1.6.1"
+    "mocha": "^8.1.3",
+    "nock": "^13.0.4"
   }
 }

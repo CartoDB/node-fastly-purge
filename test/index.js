@@ -21,8 +21,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with no Fastly headers', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .reply(200, {
                     status:'ok',
                     id:'108-1391560174-974124'
@@ -31,8 +29,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.url(FAKE_PURGE_URL, function(err, result) {
                 assert.ok(!err);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -42,7 +40,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -51,8 +48,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.service(FAKE_SERVICE_ID, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -62,7 +59,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -71,8 +67,37 @@ describe('FastlyPurge', function() {
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                done();
+            });
+        });
+    });
+
+    describe('shielding purge', function() {
+        var fastlyPurge = new FastlyPurge(FAKE_API_KEY);
+        
+        it('should purge twice by surrogate KEY with Fastly API key header', function(done) {
+            var purgePath = '/service/' + FAKE_SERVICE_ID + '/purge/' + FAKE_SURROGATE_KEY;
+            var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
+                .post(purgePath)
+                .matchHeader('Fastly-Key', FAKE_API_KEY)
+                .matchHeader('Accept', 'application/json')
+                .times(2)
+                .reply(200, {
+                    status:'ok'
+                });
+
+            var options = {
+                shieldingDelay: 100,
+                shieldingWait: true
+            };
+
+            fastlyPurge.shieldingKey(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, options, function(err, result) {
+                assert.ok(!err, err && err.message);
+                assert.ok(result);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -84,7 +109,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with Fastly soft purge header but no API key', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
                 .matchHeader('Fastly-Soft-Purge', 1)
                 .reply(200, {
                     status:'ok',
@@ -94,8 +118,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.url(FAKE_PURGE_URL, function(err, result) {
                 assert.ok(!err);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -105,7 +129,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -114,8 +137,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.service(FAKE_SERVICE_ID, {}, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -134,8 +157,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -148,8 +171,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with NO Fastly soft purge header', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .reply(200, {
                     status:'ok',
                     id:'108-1391560174-974124'
@@ -158,8 +179,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.url(FAKE_PURGE_URL, { softPurge: false }, function(err, result) {
                 assert.ok(!err);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -169,7 +190,6 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, {
                     status:'ok'
@@ -178,8 +198,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, { softPurge: false }, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -193,7 +213,6 @@ describe('FastlyPurge', function() {
         it('should purge URL with Fastly soft purge headers', function(done) {
             var scope = nock(FAKE_PURGE_HOST)
                 .intercept(FAKE_PURGE_PATH, 'PURGE')
-                .matchHeader('Fastly-Key', undefined)
                 .matchHeader('Fastly-Soft-Purge', 1)
                 .reply(200, {
                     status:'ok',
@@ -203,8 +222,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.url(FAKE_PURGE_URL, { softPurge: true }, function(err, result) {
                 assert.ok(!err);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -223,8 +242,8 @@ describe('FastlyPurge', function() {
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, { softPurge: true }, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result.status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result.status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -239,16 +258,15 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(503, 'Service Unavailable');
 
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, function(err, result) {
                 assert.ok(!result);
                 assert.ok(err);
-                assert.equal(err.statusCode, 503);
-                assert.equal(err.message, 'Service Unavailable');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(err.statusCode, 503);
+                assert.strictEqual(err.message, 'Service Unavailable');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -258,16 +276,15 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(501);
 
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, function(err, result) {
                 assert.ok(!result);
                 assert.ok(err);
-                assert.equal(err.statusCode, 501);
-                assert.equal(err.message, 'Empty response body');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(err.statusCode, 501);
+                assert.strictEqual(err.message, 'Empty response body');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -282,15 +299,14 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, '{ "status":"ok" }');
 
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(JSON.parse(result).status, 'ok');
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(JSON.parse(result).status, 'ok');
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
@@ -301,15 +317,14 @@ describe('FastlyPurge', function() {
             var scope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
                 .post(purgePath)
                 .matchHeader('Fastly-Key', FAKE_API_KEY)
-                .matchHeader('Fastly-Soft-Purge', undefined)
                 .matchHeader('Accept', 'application/json')
                 .reply(200, '{ "status":"ok" ', { 'Content-Type': 'application/json' });
 
             fastlyPurge.key(FAKE_SERVICE_ID, FAKE_SURROGATE_KEY, function(err, result) {
                 assert.ok(!err, err && err.message);
                 assert.ok(result);
-                assert.equal(result, invalidJsonString);
-                assert.equal(scope.pendingMocks().length, 0);
+                assert.strictEqual(result, invalidJsonString);
+                assert.strictEqual(scope.pendingMocks().length, 0);
                 done();
             });
         });
